@@ -16,8 +16,11 @@ import java.util.Vector;
 
 import com.orientechnologies.orient.core.config.OGlobalConfiguration;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.dictionary.ODictionary;
+import com.orientechnologies.orient.core.index.OIndexCursor;
 import com.orientechnologies.orient.core.intent.OIntentMassiveInsert;
+import com.orientechnologies.orient.core.record.ORecord;
 import com.orientechnologies.orient.core.record.ORecordInternal;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.yahoo.ycsb.ByteIterator;
@@ -42,7 +45,7 @@ public class OrientDBClient extends DB {
 
   private ODatabaseDocumentTx             db;
   private static final String             CLASS = "usertable";
-  private ODictionary<ORecordInternal<?>> dictionary;
+  private ODictionary<ORecord> dictionary;
 
   /**
    * Initialize any state for this DB. Called once per DB instance; there is one DB instance per client thread.
@@ -205,20 +208,6 @@ public class OrientDBClient extends DB {
    * @return Zero on success, a non-zero error code on error. See this class's description for a discussion of error codes.
    */
   public int scan(String table, String startkey, int recordcount, Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
-    try {
-      final Collection<ODocument> documents = dictionary.getIndex().getEntriesMajor(startkey, true, recordcount);
-      for (ODocument document : documents) {
-        final HashMap<String, ByteIterator> entry = new HashMap<String, ByteIterator>(fields.size());
-        result.add(entry);
-
-        for (String field : fields)
-          entry.put(field, new StringByteIterator((String) document.field(field)));
-      }
-
-      return 0;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return 1;
+	  throw new UnsupportedOperationException("Scan is not yet supported");
   }
 }
